@@ -1,7 +1,6 @@
 # ----------------------------------------
 # Analisis Sintatico para Lua 5.1
 #
-# (c) Angel A Agudelo Z
 # ----------------------------------------
 from lexer  import Lexer
 from errors import error

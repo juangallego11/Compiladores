@@ -1,0 +1,443 @@
+Dibujar el AFD LR(1) - LALR(1) para la siguiente gramatica:
+Construyen la Tabla de sintaxis para LALR(1)
+
+0. E' : E $                  |   FIRST  |    FOLLOW
+1. E : E + T          -------|----------|-------------------
+2. E : E - T              E' |  num - ( |      $
+3. E : T                  E  |  num - ( |     $ + - )
+4. T : T * F              T  |  num - ( |     $ + - ) * / 
+5. T : T / F              F  |  num - ( |     $ + - ) * /
+6. T : F                     |          |
+7. F : num                   |          |
+8. F : - F                   |          |
+9. F : ( E )                 |          |
+
+AFD
+
+Estado 0
+
+    E' : .E $
+    
+------------------------
+
+    E :  .E + T        $
+    E :  .E - T        $
+    E :  .T            $
+    T :  .T * F        $
+    T :  .T / F        $
+    T :  .F            $
+    F :  .num          $
+    F :  .- F          $
+    F :  .( E )        $
+    
+    E           goto Estado 1
+    T           goto Estado 2
+    F           goto Estado 3
+    num   shift goto Estado 4
+    -     shift goto Estado 5
+    (     shift goto Estado 6
+    
+Estado 1 (aceptación)
+
+    E' : E . $
+    E :  E . + T       $
+    E :  E . - T       $
+    
+    $   reduce usando r0
+    +   shift goto Estado 7
+    -   shift goto Estado 8
+    
+Estado 2
+
+    E :  T .          $
+    T :  T . * F      $
+    T :  T . / F      $
+    
+    $   reduce usando r3
+    *   shift goto Estado 9
+    /   shift goto Estado 10
+    
+Estado 3
+
+    T :  F .          $
+    
+    $   reduce usando r6
+    
+Estado 4
+
+    F :  num .        $
+    
+    $ reduce usando r7
+    
+Estado 5
+
+    F :  - . F        $
+    
+-----------------------------
+
+    F :  .num          $
+    F :  .- F          $
+    F :  .( E )        $
+    
+    F         goto Estado 11
+    num shift goto Estado 4
+    -   shift goto Estado 5
+    (   shift goto Estado 6
+    
+Estado 6
+
+    F :  ( . E )      $
+
+------------------------------
+
+    E :  .E + T        )
+    E :  .E - T        )
+    E :  .T            )
+    T :  .T * F        )
+    T :  .T / F        )
+    T :  .F            )
+    F :  .num          )
+    F :  .- F          )
+    F :  .( E )        )
+    
+    
+    F         goto Estado 27
+    num shift goto Estado 23
+    E         goto Estado 22
+    T         goto Estado 12
+    -   shift goto Estado 13
+    (   shift goto Estado 14
+    
+    
+Estado 7
+
+    E :  E  + .T       $
+    
+------------------------------
+
+    T :  .T * F        $
+    T :  .T / F        $
+    T :  .F            $
+    F :  .num          $
+    F :  .- F          $
+    F :  .( E )        $
+    
+    F         goto Estado 3
+    num shift goto Estado 4
+    -   shift goto Estado 5
+    (   shift goto Estado 6
+    T         goto Estado 15
+    
+    
+Estado 8
+
+    E :  E  - .T       $
+    
+------------------------------
+
+    T :  .T * F        $
+    T :  .T / F        $
+    T :  .F            $
+    F :  .num          $
+    F :  -. F          $
+    F :  .( E )        $
+    
+    T         goto Estado 16
+    F         goto Estado 3
+    num shift goto Estado 4
+    (   shift goto Estado 6
+    
+Estado 9
+
+    T :  T  * .F       $
+    
+------------------------------
+
+    F :  .num          $
+    F :  .- F          $
+    F :  .( E )        $
+    
+    F         goto Estado 17
+    num shift goto Estado 4
+    -   shift goto Estado 5
+    (   shift goto Estado 6
+    
+Estado 10
+
+    T :  T  / .F       $
+    
+------------------------------
+
+    F :  .num          $
+    F :  .- F          $
+    F :  .( E )        $
+    
+    -   shift goto Estado 5
+    (   shift goto Estado 6
+    num shift goto Estado 4
+    F         goto Estado 18
+    
+Estado 11
+
+    F :  - F .       $
+    
+    $ reduce usando r8
+    
+Estado 12
+
+    E : T .             )
+    T :  T . * F        )
+    T :  T . / F        )
+   
+    )   reduce usando r3
+    *   shift goto Estado 9
+    /   shift goto Estado 10
+    
+    
+Estado 13
+
+    F : - . F          )
+   
+-------------------------------
+
+    F : .num            )     
+    F : .- F            )      
+    F : .( E )          )
+
+    F         goto Estado 21
+    num shift goto Estado 23
+    -   shift goto Estado 13
+    (   shift goto Estado 14
+    
+Estado 14
+
+    F : ( . E )        )
+    
+-------------------------------
+    E : .E + T         )
+    E : .E - T         )  
+    E : .T             )
+    T : .T * F        )
+    T : .T / F        )
+    T : .F            )
+    
+    E         goto Estado 22
+    T         goto Estado 12
+    F         goto Estado 27
+    
+Estado 15
+
+    E :  E  + T .       $
+    T :  T . * F        $
+    T :  T . / F        $
+
+    
+    $   reduce usando r1
+    *   shift goto Estado 9
+    /   shift goto Estado 10
+
+
+Estado 16
+
+    E :  E  - T.       $
+    T :  T. * F        $
+    T :  T. / F        $
+   
+    $   reduce usando r2
+    *   shift goto Estado 9
+    /   shift goto Estado 10
+
+    
+Estado 17
+
+    T :  T  * F.       $
+        
+    $   reduce usando r4 
+    
+    
+Estado 18
+
+    T :  T  / F.       $
+      
+    $   reduce usando r5 
+    
+    
+Estado 19
+
+    F :  ( E ).       $
+   
+    $   reduce usando r9
+    
+Estado 20
+
+    E : T.             )
+
+    )   reduce usando r3
+    
+    
+Estado 21
+
+    F : - F .          )
+  
+    )   reduce usando r8
+
+Estado 22
+
+    F : (  E. )        )
+    E : E. + T         )
+    E : E. - T         )  
+
+    )   shift goto Estado 14
+    +   shift goto Estado 24
+    -   shift goto Estado 25
+    
+Estado 23
+
+    F : num.           )      
+
+    )   reduce usando r7
+    
+Estado 24
+
+    E : E + .T         )
+
+--------------------------------
+    T : .T * F          )   
+    T : .T / F          )  
+    T : .F              )
+    F : .num            )
+    F : .- F            )
+    F : .( E )          )
+    
+    T         goto Estado 26
+    F         goto Estado 27
+    num shift goto 23
+    -   shift go to 13
+    (   shift go to 14
+    
+Estado 25
+
+    E : E - .T         )  
+    
+----------------------------------------------
+
+    T : .T * F          )   
+    T : .T / F          )  
+    T : .F              )
+    F : .num            )
+    F : .- F            )
+    F : .( E )          )
+
+    T        goto Estado 28
+    F        goto Estado 27
+    num shift goto 23
+    -   shift go to 13
+    (   shift go to 14
+    
+Estado 26
+
+    E : E + T.          )
+    T : T. * F          )   
+    T : T. / F          )  
+    
+    )  reduce usando r1
+    *  shift goto Estado 29
+    /  shift goto Estado 30
+    
+    
+Estado 27
+
+    T : F.              )
+
+    )  reduce usando r6
+    
+Estado 28
+
+    E : E - T.          )  
+    T : T. * F          )   
+    T : T. / F          )  
+    
+    )  reduce usando r2
+    *   shift goto Estado 29
+    /   shift goto Estado 30
+    
+Estado 29
+
+    T : T * .F          ) 
+    
+-------------------------------------
+
+    F : .num            )           
+    F : .- F            )      
+    F : .( E )          )
+    
+    F         goto Estado 31
+    num shift goto Estado 23
+    -   shift goto Estado 13
+    (   shift goto Estado 14
+ 
+Estado 30
+
+    T : T / .F          )  
+    
+----------------------------------
+
+    F : .num            )           
+    F : .- F            )      
+    F : .( E )          )
+    
+    F          goto Estado 32
+    num shift goto Estado 23
+    -   shift goto Estado 13
+    (   shift goto Estado 14
+    
+Estado 31
+
+    T : T * F.         ) 
+    
+    )   reduce usando r4
+    
+Estado 32
+
+    T : T / F .         )  
+   
+    )   reduce usando r5
+    
+
+       ACTION                                                                    GOTO
+-----  -------------------------------------------------------------------  -------------------
+          +      -         /        *         num      $     (     )          E    T    F
+-----  -------------------------------------------------------------------  -------------------
+ s0             s5                            s4             s6               1    2    3
+ s1      s7     s8                                     r0       
+ s2                       s10      s9                  r3     
+ s3                                                    r6
+ s4                                                    r7
+ s5             s5                            s4             s6                         11
+ s6             s13                           s23            s14              22   12   27
+ s7             s5                            s4             s6                    15    3
+ s8             s5                            s4             s6                    16    3
+ s9             s5                            s4             s6                          17
+ s10            s5                            s4             s6                          18
+ s11                                                   r8
+ s12                       s10     s9                             r3
+ s13            s13                           s23            s14                         21
+ s14                                                                          22   12    27
+ s15                       s10     s9                  r1
+ s16                       s10     s9                  r2
+ s17                                                   r4
+ s18                                                   r5
+ s19                                                   r9
+ s20                                                               r3
+ s21                                                               r8
+ s22      s24   s25                                                s14
+ s23                                                               r7
+ s24            s13                           s23            s14                    26    27
+ s25            s13                           s23            s14                    28    27
+ s26                       s30     s29                             r1
+ s27                                                               r6
+ s28                       s30     s29                             r2
+ s29            s13                           s23            s14                          31
+ s30            s13                           s23            s14                          32
+ s31                                                               r4
+ s32                                                               r5
