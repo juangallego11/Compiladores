@@ -1,0 +1,19 @@
+function pruebamult()
+local resul,total = 10,0
+mult = 15 * 8
+resul = resul + sum
+
+if resul~=10 then 
+   resul = 0
+   return resul
+else 
+   total = resul	
+   return resul
+end
+return resul
+end
+local valor = 12 
+valor = valor + 18 * 48 + 23
+total = total + valor
+return ;
+
