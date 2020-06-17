@@ -104,8 +104,8 @@ Rule 100   empty -> <empty>
 
 Unused terminals:
 
-    TDOT
     APPEND
+    TDOT
     UMINUS
 
 Terminals, with rules where they appear:
