@@ -5,3 +5,4 @@
 # Programa que soluciona First/follow
 # Talleres Gramatica SL Y SLR(1)
 # Taller LR(K) Y LALR(1)
+# Paper Con lo realizado en clases
